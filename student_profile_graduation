@@ -1,0 +1,26 @@
+<!--This file is meant to be used to register students for graduation-->
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<?php
+		include 'header.php';
+		?>
+	<div class="container-fluid">
+
+		<div class="row content">
+			
+
+			<div class="col-sm-1 sidenav" style="background-color:blue; height:100%;">
+				<h4>MENU</h4>
+			</div>
+
+			<div class="col-sm-11" style="background-color:black;">
+				<h1>Home sweet home</h1>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
