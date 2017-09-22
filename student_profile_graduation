@@ -1,26 +1,106 @@
-<!--This file is meant to be used to register students for graduation-->
-<!DOCTYPE html>
-<html>
-<head>
-	<title></title>
-</head>
-<body>
-<?php
+<!--HTML TAGS ARE IN THE HEADER FILE-->
+		<?php
 		include 'header.php';
 		?>
 	<div class="container-fluid">
-
 		<div class="row content">
-			
-
-			<div class="col-sm-1 sidenav" style="background-color:blue; height:100%;">
+			<div class="col-sm-2 sidenav">
 				<h4>MENU</h4>
+				<ul class="nav nav-pills nav-stacked" data-spy="affix" data-offset-top="205">
+					<li><a href="student_profile.php">Profile</a></li>
+					<li><a href="units.php">Units</a></li>
+					<li><a href="attendance.php">Attendance</a></li>
+					<li><a href="exam_result.php">Exams</a></li>
+					<li><a href="fees.php">Fees</a></li>
+					<li class="active"><a href="graduation.php">Register For Graduation</a></li>
+          			<li><a href="#">Logout</a></li>
+				</ul>
 			</div>
 
-			<div class="col-sm-11" style="background-color:black;">
-				<h1>Home sweet home</h1>
+			<div class="col-sm-10">
+				<h1><center><b><u>GRADUTION</u></b></center></h1>
+				<?php
+					//check for an error
+					$url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+
+					if(strpos($url,'message=registered')){
+						echo 
+						"
+							<div class='alert alert-success'>
+								<strong>You have been Registered</strong>
+							</div>
+
+						";
+					}
+
+					?>
+				<center><img src="grad.jpg" class="img-thumbnail" width="400" height="240"></center>
+				<?php
+					//inorder to register for graduation you have to be in 4th Year 
+					if($year==$course_period){
+						//if the year corresponds to the period set then student can register for graduation
+
+						//check if all units done by student status is passed
+						$sql = "select * from registered_units where student_id = $id and status='failed' ";
+						$result = $conn->query($sql);
+
+						$row= $result->fetch_assoc();
+						if($row > 0){
+							//if he has a repeat in any unit then he is not going to vote
+							echo "
+								<div class='alert alert-danger'><B>You have a unit/ some units that you have not passed</B></div>
+							";
+
+						}else{
+							//if he has passed all units then check if he is alredy registered for graduation
+							$sql = "select * from graduation where student_id = $id";
+							$result= $conn->query($sql);
+
+							$row = $result->fetch_assoc();
+							if($row > 0){
+								$grad_id = $row['grad_id'];
+								echo '
+									<div class="alert alert-success">You are a Graduant. Your Graduant id is '.$grad_id.'</div>
+								';
+							}else{
+								//he is not registered then give him the offer to register
+								
+							?>
+									<div class="row">
+										<div class="col-sm-4">
+											
+										</div>
+
+										<div class="col-sm-4">
+											<?php echo '<br><br><br><h3><center>click below to register</center></h3> ';?>
+											<form method="post" action="includes/grad.inc.php">
+												<input type="hidden" name="student_id" value="<?php echo $id; ?>">
+												<input type="hidden" name="faculty" value="<?php echo $faculty; ?>">
+												<button type="submit" class="btn btn-success btn-large btn-block" style="height:50px;">Register Now</button>
+											</form>
+										</div>
+									</div>
+
+							<?php
+								
+							}
+							
+						}
+
+					}else{
+
+						echo '
+						<div class="alert alert-danger">
+							<B>You are not eligible to register for graduation.</B>
+							Contact The Adminstrator for more information
+						</div>';
+					}
+				?>
 			</div>
 		</div>
 	</div>
-</body>
-</html>
+  
+<!--WE ALSO INCLUDE A COMMON FOOTER IN ALL FILES-->
+	<?php
+    include 'includes\footer.php';
+  ?>
